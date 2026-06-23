@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import 'dotenv/config';
+import { products } from './products.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,6 +17,10 @@ app.use(express.json());
 app.get('/health', (req, res) => {
     res.json({status: 'ok'})
 })
+
+app.get('/api/products', (req, res) => {
+    res.json(products);
+});
 
 //Start server
 app.listen(PORT, () => {

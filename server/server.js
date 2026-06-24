@@ -38,6 +38,19 @@ app.post('/api/setup-intent', async (req, res) => {
   }
 });
 
+// Payment Methods
+app.get('/api/payment-methods', async (req, res) => {
+  try {
+    const paymentMethods = await stripe.customers.listPaymentMethods(
+      process.env.STRIPE_CUSTOMER_ID,
+      { type: 'card' }
+    );
+    res.json(paymentMethods.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

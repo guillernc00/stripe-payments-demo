@@ -51,6 +51,16 @@ app.get('/api/payment-methods', async (req, res) => {
   }
 });
 
+// Delete Payment Method
+app.delete('/api/payment-methods/:id', async (req, res) => {
+  try {
+    const detached = await stripe.paymentMethods.detach(req.params.id);
+    res.json(detached);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

@@ -61,6 +61,35 @@ app.delete('/api/payment-methods/:id', async (req, res) => {
   }
 });
 
+// Payment Intent
+app.post('/api/payment-intent', async (req, res) => {
+  try {
+    const { items } = req.body;
+
+    if (!items || items.length === 0) {
+      return res.status(400).json({ error: 'No items provided' });
+    }
+
+    const total = items.reduce((sum, item) => {
+      const product = products.find(p => p.id === item.id);
+      if (!product) {
+        throw new Error(`Product not found: ${item.id}`);
+      }
+      return sum + product.price * item.quantity;
+    }, 0);
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: total,
+      currency: 'usd',
+      customer: process.env.STRIPE_CUSTOMER_ID,
+    });
+
+    res.json({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

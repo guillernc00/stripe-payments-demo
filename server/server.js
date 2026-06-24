@@ -3,8 +3,11 @@ import cors from 'cors';
 import helmet from 'helmet';
 import 'dotenv/config';
 import { products } from './products.js';
+import Stripe from 'stripe'
+
 
 const app = express();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const PORT = process.env.PORT || 3001;
 
 //Middleware
@@ -12,14 +15,27 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-//Health check
-
+//Health Check
 app.get('/health', (req, res) => {
     res.json({status: 'ok'})
 })
 
+//Products
 app.get('/api/products', (req, res) => {
     res.json(products);
+});
+
+// Setup Intent
+app.post('/api/setup-intent', async (req, res) => {
+  try {
+    const setupIntent = await stripe.setupIntents.create({
+      customer: process.env.STRIPE_CUSTOMER_ID,
+      payment_method_types: ['card'],
+    });
+    res.json({ clientSecret: setupIntent.client_secret });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 //Start server

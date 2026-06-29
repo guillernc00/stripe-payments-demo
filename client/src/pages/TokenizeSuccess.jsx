@@ -17,14 +17,20 @@ function TokenizeSuccess() {
         }
 
         const fetchCardDetails = async () => {
-            const stripe = await stripePromise;
-            const { setupIntent } = await stripe.retrieveSetupIntent(clientSecret)
+            try {
+                const stripe = await stripePromise;
+                const { setupIntent } = await stripe.retrieveSetupIntent(clientSecret)
 
-            if (setupIntent.status === 'succeeded') {
-                const res = await fetch('http://localhost:3001/api/payment-methods')
-                const paymentMethods = await res.json();
-                const savedCard = paymentMethods.find(pm => pm.id === setupIntent.payment_method);
-                setCard(savedCard)
+                if (setupIntent.status === 'succeeded') {
+                    const res = await fetch('http://localhost:3001/api/payment-methods')
+                    if (!res.ok) throw new Error('Failed to fetch payment methods');
+                    const paymentMethods = await res.json();
+                    const savedCard = paymentMethods.find(pm => pm.id === setupIntent.payment_method);
+                    if (!savedCard) throw new Error('Card not found');
+                    setCard(savedCard)
+                }
+            } catch (err) {
+                setError(err.message)
             }
         }
 

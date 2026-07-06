@@ -40,11 +40,18 @@ function Purchase() {
       )}
       {step === 3 && (
         <PurchaseSuccess
-          cart={cart}
-          total={total}
-          paymentIntent={paymentIntent}
-        />
-      )}
+        cart={cart}
+        total={total}
+        paymentIntent={paymentIntent}
+        onReset={() => {
+          setCart([]);
+          setTotal(0);
+          setPaymentIntent(null);
+          setStep(1);
+        }
+      }
+  />
+)}
     </div>
   );
 }

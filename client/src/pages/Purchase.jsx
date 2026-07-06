@@ -7,12 +7,12 @@ function Purchase() {
   const [step, setStep] = useState(1);
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const [paymentIntent, setPaymentIntent] = useState(null);
 
   return (
     <div>
       <h1>Create a Purchase</h1>
 
-      {/* Stepper */}
       <div>
         <span>Step 1: Select Products</span>
         <span>Step 2: Payment</span>
@@ -32,13 +32,17 @@ function Purchase() {
         <PaymentStep
           cart={cart}
           total={total}
-          onSuccess={() => setStep(3)}
+          onSuccess={(pi) => {
+            setPaymentIntent(pi);
+            setStep(3);
+          }}
         />
       )}
       {step === 3 && (
         <PurchaseSuccess
           cart={cart}
           total={total}
+          paymentIntent={paymentIntent}
         />
       )}
     </div>

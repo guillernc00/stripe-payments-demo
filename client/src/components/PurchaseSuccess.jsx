@@ -1,7 +1,8 @@
 import OrderSummary from './OrderSummary.jsx';
 
 function PurchaseSuccess({ cart, total, paymentIntent, onReset }) {
-  return (
+    if (!paymentIntent) return <p>Something went wrong. Please try again.</p>;
+    return (
     <div>
       <h2>Payment Successful!</h2>
       <p>Your order has been processed successfully.</p>

@@ -5,7 +5,7 @@ function Home() {
 
   return (
     <div>
-      <h1 className="text-4xl font-bold text-blue-600">Stripe Payments Demo</h1>
+      <h1>Stripe Payments Demo</h1>
       <p>Choose a flow to get started</p>
 
       <div>

@@ -9,9 +9,7 @@ function TokenizeForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!stripe || !elements) return;
-
     setIsLoading(true);
     setErrorMessage('');
 
@@ -29,10 +27,20 @@ function TokenizeForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-6">
       <PaymentElement />
-      {errorMessage && <p>{errorMessage}</p>}
-      <button type="submit" disabled={!stripe || isLoading}>
+
+      {errorMessage && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+          <p className="text-red-600 text-sm">{errorMessage}</p>
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={!stripe || isLoading}
+        className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
         {isLoading ? 'Saving...' : 'Save Card'}
       </button>
     </form>

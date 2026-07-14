@@ -4,8 +4,8 @@ import { stripePromise } from '../lib/stripe.js';
 import TokenizeForm from '../components/TokenizeForm.jsx';
 
 function Tokenize() {
-  const [clientSecret, setClientSecret] = useState(''); 
-  const [isLoading, setIsLoading] = useState(true); 
+  const [clientSecret, setClientSecret] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -21,21 +21,35 @@ function Tokenize() {
         setIsLoading(false);
       }
     }
-
     init();
   }, []);
 
-  if (isLoading) return <p>Loading...</p>; 
-  if (error) return <p>{error}</p>;
+  if (isLoading) return (
+    <div className="flex items-center justify-center py-20">
+      <p className="text-gray-500">Loading...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+      <p className="text-red-600 text-sm">{error}</p>
+    </div>
+  );
 
   return (
     <div>
-      <h1>Tokenize a Card</h1>
-      {clientSecret && (
-        <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <TokenizeForm />
-        </Elements>
-      )}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Tokenize a Card</h1>
+        <p className="text-gray-500">Create a payment method token from card details</p>
+      </div>
+
+      <div className="bg-white border border-gray-200 rounded-xl p-6 max-w-lg">
+        {clientSecret && (
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <TokenizeForm />
+          </Elements>
+        )}
+      </div>
     </div>
   );
 }

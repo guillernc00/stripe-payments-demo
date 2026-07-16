@@ -102,3 +102,50 @@ describe('DELETE /api/payment-methods/:id', () => {
     expect(remainingIds).not.toContain(pmId);
   });
 });
+
+describe('POST /api/payment-intent', () => {
+  it('returns 200 with valid items', async () => {
+    const res = await request(app)
+      .post('/api/payment-intent')
+      .send({ items: [{ id: 'smart-watch', quantity: 1 }] });
+    expect(res.status).toBe(200);
+  });
+
+  it('returns a clientSecret', async () => {
+    const res = await request(app)
+      .post('/api/payment-intent')
+      .send({ items: [{ id: 'smart-watch', quantity: 1 }] });
+    expect(res.body).toHaveProperty('clientSecret');
+  });
+
+  it('clientSecret starts with pi_', async () => {
+    const res = await request(app)
+      .post('/api/payment-intent')
+      .send({ items: [{ id: 'smart-watch', quantity: 1 }] });
+    expect(res.body.clientSecret).toMatch(/^pi_/);
+  });
+
+  it('returns 400 when items array is empty', async () => {
+    const res = await request(app)
+      .post('/api/payment-intent')
+      .send({ items: [] });
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('returns error when product id does not exist', async () => {
+    const res = await request(app)
+      .post('/api/payment-intent')
+      .send({ items: [{ id: 'fake-product', quantity: 1 }] });
+    expect(res.status).toBe(500);
+    expect(res.body.error).toMatch(/Product not found/);
+  });
+
+  it('calculates total correctly server-side', async () => {
+    const res = await request(app)
+      .post('/api/payment-intent')
+      .send({ items: [{ id: 'laptop-stand', quantity: 2 }] });
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('clientSecret');
+  });
+});

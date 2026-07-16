@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import 'dotenv/config';
 import { products } from './products.js';
 import Stripe from 'stripe'
+import { calculateTotal } from './utils/calculateTotal.js';
 
 
 const app = express();
@@ -70,13 +71,7 @@ app.post('/api/payment-intent', async (req, res) => {
       return res.status(400).json({ error: 'No items provided' });
     }
 
-    const total = items.reduce((sum, item) => {
-      const product = products.find(p => p.id === item.id);
-      if (!product) {
-        throw new Error(`Product not found: ${item.id}`);
-      }
-      return sum + product.price * item.quantity;
-    }, 0);
+    const total = calculateTotal(items, products);
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: total,
@@ -98,7 +93,11 @@ app.use((err, req, res, next) => {
   });
 });
 
-//Start server
-app.listen(PORT, () => {
+// Start server
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-})
+  });
+}
+
+export default app;

@@ -76,3 +76,29 @@ describe('GET /api/payment-methods', () => {
     });
   });
 });
+
+describe('DELETE /api/payment-methods/:id', () => {
+  it('returns error on invalid payment method id', async () => {
+    const res = await request(app).delete('/api/payment-methods/pm_fake123');
+    expect(res.status).toBe(500);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('successfully detaches a valid payment method', async () => {
+    const listRes = await request(app).get('/api/payment-methods');
+    const cards = listRes.body;
+
+    if (cards.length === 0) {
+      console.log('No saved cards to delete — skipping test');
+      return;
+    }
+
+    const pmId = cards[0].id;
+    const deleteRes = await request(app).delete(`/api/payment-methods/${pmId}`);
+    expect(deleteRes.status).toBe(200);
+
+    const afterRes = await request(app).get('/api/payment-methods');
+    const remainingIds = afterRes.body.map(pm => pm.id);
+    expect(remainingIds).not.toContain(pmId);
+  });
+});

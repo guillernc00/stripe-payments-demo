@@ -35,3 +35,20 @@ describe('GET /api/products', () => {
     });
   });
 });
+
+describe('POST /api/setup-intent', () => {
+  it('returns 200 status', async () => {
+    const res = await request(app).post('/api/setup-intent');
+    expect(res.status).toBe(200);
+  });
+
+  it('returns a clientSecret', async () => {
+    const res = await request(app).post('/api/setup-intent');
+    expect(res.body).toHaveProperty('clientSecret');
+  });
+
+  it('clientSecret starts with seti_', async () => {
+    const res = await request(app).post('/api/setup-intent');
+    expect(res.body.clientSecret).toMatch(/^seti_/);
+  });
+});

@@ -52,3 +52,27 @@ describe('POST /api/setup-intent', () => {
     expect(res.body.clientSecret).toMatch(/^seti_/);
   });
 });
+
+describe('GET /api/payment-methods', () => {
+  it('returns 200 status', async () => {
+    const res = await request(app).get('/api/payment-methods');
+    expect(res.status).toBe(200);
+  });
+
+  it('returns an array', async () => {
+    const res = await request(app).get('/api/payment-methods');
+    expect(Array.isArray(res.body)).toBe(true);
+  });
+
+  it('each payment method has required fields', async () => {
+    const res = await request(app).get('/api/payment-methods');
+    res.body.forEach(pm => {
+      expect(pm).toHaveProperty('id');
+      expect(pm).toHaveProperty('card');
+      expect(pm.card).toHaveProperty('last4');
+      expect(pm.card).toHaveProperty('brand');
+      expect(pm.card).toHaveProperty('exp_month');
+      expect(pm.card).toHaveProperty('exp_year');
+    });
+  });
+});

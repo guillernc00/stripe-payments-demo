@@ -11,7 +11,7 @@ function Tokenize() {
   useEffect(() => {
     async function init() {
       try {
-        const res = await fetch('http://localhost:3001/api/setup-intent', { method: 'POST' });
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/setup-intent`, { method: 'POST' });
         if (!res.ok) throw new Error('Server error');
         const data = await res.json();
         setClientSecret(data.clientSecret);

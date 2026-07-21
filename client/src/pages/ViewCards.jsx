@@ -12,7 +12,7 @@ function ViewCards() {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/payment-methods');
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/payment-methods`);
         if (!res.ok) throw new Error('Failed to fetch saved cards');
         const data = await res.json();
         setCards(data);
@@ -28,7 +28,7 @@ function ViewCards() {
   const handleDelete = async (id) => {
     setDeletingId(id);
     try {
-      const res = await fetch(`http://localhost:3001/api/payment-methods/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/payment-methods/${id}`, {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error('Failed to delete card');

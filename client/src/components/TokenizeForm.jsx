@@ -16,7 +16,7 @@ function TokenizeForm() {
     const { error } = await stripe.confirmSetup({
       elements,
       confirmParams: {
-        return_url: 'http://localhost:5173/tokenize/success',
+        return_url: `${window.location.origin}/tokenize/success`,
       },
     });
 

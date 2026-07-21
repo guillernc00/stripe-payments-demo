@@ -43,7 +43,7 @@ function PaymentForm({ cart, total, clientSecret, onSuccess }) {
       } else {
         result = await stripe.confirmPayment({
           elements,
-          confirmParams: { return_url: 'http://localhost:5173/purchase' },
+          confirmParams: { return_url: `${window.location.origin}/purchase`, },
           redirect: 'if_required',
         });
       }

@@ -16,7 +16,7 @@ function PaymentForm({ cart, total, clientSecret, onSuccess }) {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/payment-methods');
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/payment-methods`);
         if (!res.ok) throw new Error('Failed to fetch saved cards');
         const data = await res.json();
         setSavedCards(data);
@@ -157,7 +157,7 @@ function PaymentStep({ cart, total, onSuccess }) {
     const createIntent = async () => {
       try {
         const items = cart.map(item => ({ id: item.id, quantity: item.quantity }));
-        const res = await fetch('http://localhost:3001/api/payment-intent', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/payment-intent`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ items }),

@@ -4,6 +4,8 @@ A full-stack payment integration demo built with the Stripe SDK — featuring th
 
 🔗 **[Live Demo](https://stripe-payments-demo-prod.vercel.app)** | 📋 **[Agile Board](https://github.com/users/guillernc00/projects/3)**
 
+⚠️ The backend runs on Render's free tier and spins down after 15 minutes of inactivity. The first request may take 30–60 seconds to wake up — subsequent requests are fast.
+
 ---
 
 ## Tech Stack
@@ -16,8 +18,7 @@ A full-stack payment integration demo built with the Stripe SDK — featuring th
 ![Stripe](https://img.shields.io/badge/Stripe-008CDD?logo=stripe&logoColor=white)
 ![Jest](https://img.shields.io/badge/Jest-C21325?logo=jest&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white)
-![Railway](https://img.shields.io/badge/Railway-0B0D0E?logo=railway&logoColor=white)
-
+![Render](https://img.shields.io/badge/Render-46E3B7?logo=render&logoColor=000)
 ---
 
 ## Overview
@@ -33,7 +34,7 @@ This project demonstrates a production-ready Stripe SDK integration across three
 ## Architecture
 
 ```
-React (Vercel) → Express API (Railway) → Stripe SDK → Stripe
+React (Vercel) → Express API (Render) → Stripe SDK → Stripe
 ```
 
 The frontend never handles card data directly — Stripe Elements collects it in an iframe and returns a reference. The backend uses that reference to confirm intents and manage PaymentMethods.
